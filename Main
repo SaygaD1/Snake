@@ -1,0 +1,102 @@
+#include <SFML/Graphics.hpp>
+#include <time.h>
+#include <stdio.h>
+#include "App.h"
+using namespace sf;
+
+int main()
+{
+    App ap(1,1);
+    srand(time(NULL));
+    RenderWindow window(VideoMode(width + 10, height + 10), "Snake!");
+    
+    Texture t1, t2, t3, borderline;
+    t1.loadFromFile("images/white.png");
+    t2.loadFromFile("images/red.png");
+    t3.loadFromFile("images/green.png");
+    borderline.loadFromFile("images/grey.png");
+    Sprite spriteb(borderline);
+    Sprite sprite1(t1);
+    Sprite sprite2(t2);
+    Sprite sprite3(t3);
+
+    String sfTmp = "Your score: " + num;
+    Text text;
+    text.setString(sfTmp);
+    text.setCharacterSize(12);
+   // text.setColor(Color::White);
+    text.setStyle(Text::Regular);
+    
+    Clock clock;
+    float timer=0, timer1=0, delay = 0.1;
+
+    ap.SetFruitX(rand() % (N-1) +1);
+    ap.SetFruitY(rand() % (M-1) +1);
+    ap.spawn();
+
+    while (window.isOpen())
+    {
+        if (closing)
+        {
+            window.close();
+        }
+        float time = clock.getElapsedTime().asSeconds();
+        clock.restart();
+        timer += time;
+        timer1 += time;
+        Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == Event::Closed)
+                window.close();
+        }
+        if (timer > delay)
+        {
+            timer = 0;
+            ap.Tick();
+        }
+        window.clear();
+        for (int i = 1; i < N; i++)
+        {
+            for (int j = 1; j < M; j++)
+            {
+                sprite1.setPosition(i * size, j * size);
+                window.draw(sprite1);
+            }
+        }
+        for (int i = 0; i < N + 1; i ++)
+        {
+            if (i == 0 || i == N)
+            {
+                for (int j = 0; j < M + 1; j++)
+                {
+                    spriteb.setPosition(i * size, j * size);
+                    window.draw(spriteb);
+                }
+            }
+            else
+            {
+                for (int j = 0; j < M + 1; j += M)
+                {
+                    spriteb.setPosition(i * size, j * size);
+                    window.draw(spriteb);
+                }
+
+            }
+        }
+        for (int i = 0; i < num; i++)
+        {
+            sprite2.setPosition(ap.getSnakeX(i) * size, ap.getSnakeY(i) * size);
+            window.draw(sprite2);
+        }
+        sprite3.setPosition(ap.getFruitX() * size, ap.getFruitY() * size);
+        window.draw(sprite3);
+       /*if (timer1 > delay)
+        {
+            timer1 = 0;
+            window.draw(text);
+        }*/
+        window.display();
+    }
+    return 0;
+}
